@@ -1,5 +1,12 @@
-import { PRODUCTS } from '../data/products';
 import { test, expect } from '../fixtures/base-test'
+import rawData from '../data/purchaseData.json';
+import { PurchaseData } from './types/purchaseData';
+import rawProducts from '../data/products.json';
+import { ProductsData } from './types/products';
+
+const productsData = rawProducts as ProductsData;
+const products = productsData.products;
+const purchaseData = rawData as PurchaseData;
 
 // test.describe.configure({ mode: 'parallel' });
 
@@ -18,15 +25,15 @@ test('Standard user completes a purchase successfully', async ({
   });
 
   await test.step('Add selected products to cart', async () => {
-    await inventory.addProductToCart(PRODUCTS.backpack);
-    await inventory.addProductToCart(PRODUCTS.boltShirt);
-    await inventory.addProductToCart(PRODUCTS.onesie);
-    await inventory.addProductToCart(PRODUCTS.fleeceJacket);
+    for (const product of purchaseData.productsToAdd) {
+      await inventory.addProductToCart(product);
+    }
   });
 
   await test.step('Remove unwanted products from cart', async () => {
-    await inventory.removeProductFromCart(PRODUCTS.backpack);
-    await inventory.removeProductFromCart(PRODUCTS.boltShirt);
+    for (const product of purchaseData.productsToRemove) {
+      await inventory.removeProductFromCart(product);
+    }
   });
 
   await test.step('Navigate to shopping cart', async () => {
@@ -39,16 +46,14 @@ test('Standard user completes a purchase successfully', async ({
   });
 
   await test.step('Fill checkout information', async () => {
-    await checkoutInformation.fillCheckoutInformation({
-      firstName: 'John',
-      lastName: 'Doe',
-      postalCode: '12345',
-    });
+    await checkoutInformation.fillCheckoutInformation(
+      purchaseData.checkoutInformation
+    );
     await checkoutInformation.continue();
   });
 
   await test.step('Validate order summary', async () => {
-    await checkoutOverview.validateTotal(cartTotal);
+    await checkoutOverview.validateTotal(purchaseData.expectedTotal);
   });
 
   await test.step('Complete the order', async () => {
@@ -140,4 +145,39 @@ test('Standard user purchases cheapest and most expensive product', async ({
   await test.step('Logout', async () => {
     await header.logout();
   });
+});
+
+test('User sees all products and correct product details', async ({
+  inventory,
+  inventoryItem,
+}) => {
+
+  await test.step('Open inventory page', async () => {
+    await inventory.goto();
+  });
+
+  await test.step('Verify all products are visible on inventory page', async () => {
+    for (const product of products) {
+      await inventory.expectProductVisible(product.name);
+    }
+  });
+
+  for (const product of products) {
+
+    await test.step(`Open product page for ${product.name}`, async () => {
+      await inventory.openProduct(product.name);
+    });
+
+    await test.step(`Validate product details for ${product.name}`, async () => {
+      await inventoryItem.expectProductName(product.name);
+      await inventoryItem.expectProductDescription(product.description);
+      await inventoryItem.expectProductPrice(product.price);
+    });
+
+    await test.step('Return to inventory page', async () => {
+      await inventoryItem.goBackToProducts();
+    });
+
+  }
+
 });

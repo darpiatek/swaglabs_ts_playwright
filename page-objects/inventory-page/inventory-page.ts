@@ -1,6 +1,5 @@
 import { Page, expect } from '@playwright/test';
 import { InventoryPageLocators } from './inventory-page-locators';
-import { Product } from '../../data/products';
 import { logger } from '../../config/logger';
 
 /**
@@ -70,32 +69,6 @@ export class InventoryPage {
   }
 
   /**
-   * Adds multiple products to the cart.
-   *
-   * @param products - Array of products to add
-   */
-  async addProducts(products: Product[]) {
-    logger.info('Adding multiple products to cart');
-
-    for (const product of products) {
-      await this.addProductToCart(product);
-    }
-  }
-
-  /**
-   * Removes multiple products from the cart.
-   *
-   * @param products - Array of products to remove
-   */
-  async removeProducts(products: Product[]) {
-    logger.info('Removing multiple products from cart');
-
-    for (const product of products) {
-      await this.removeProductFromCart(product);
-    }
-  }
-
-  /**
    * Navigates to the shopping cart page.
    */
   async goToCart() {
@@ -161,5 +134,35 @@ export class InventoryPage {
     const sorted = [...prices].sort((a, b) => a - b);
 
     expect(prices).toEqual(sorted);
+  }
+
+  /**
+   * Verifies that a product with the specified name is visible on the inventory page.
+   *
+   * The method locates the product container using the product name
+   * and asserts that the product item is visible to the user.
+   *
+   * @param productName - Name of the product expected to be visible on the inventory page
+   */
+  async expectProductVisible(productName: string) {
+    logger.info(`Validating product visible on inventory page: ${productName}`);
+
+    const product = this.locators.productByName(productName);
+
+    await expect(product).toBeVisible();
+  }
+
+    /**
+   * Opens the product details page by clicking the product name.
+   *
+   * @param productName - Name of the product to open
+   */
+  async openProduct(productName: string) {
+    logger.info(`Opening product page: ${productName}`);
+
+    await this.locators.productName
+      .filter({ hasText: productName })
+      .first()
+      .click();
   }
 }

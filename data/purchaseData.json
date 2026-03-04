@@ -1,0 +1,18 @@
+{
+  "productsToAdd": [
+    "Sauce Labs Backpack",
+    "Sauce Labs Bolt T-Shirt",
+    "Sauce Labs Onesie",
+    "Sauce Labs Fleece Jacket"
+  ],
+  "productsToRemove": [
+    "Sauce Labs Backpack",
+    "Sauce Labs Bolt T-Shirt"
+  ],
+  "expectedTotal": 57.98,
+  "checkoutInformation": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "postalCode": "12345"
+  }
+}

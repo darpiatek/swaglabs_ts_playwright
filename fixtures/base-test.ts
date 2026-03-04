@@ -1,5 +1,6 @@
 import { test as base } from '@playwright/test';
 import { InventoryPage } from '../page-objects/inventory-page/inventory-page';
+import { InventoryItemPage } from '../page-objects/inventory-page/inventory-item-page';
 import { CartPage } from '../page-objects/cart-page/cart-page';
 import { CheckoutInformationPage } from '../page-objects/checkout-page/checkout-information-page';
 import { CheckoutOverviewPage } from '../page-objects/checkout-page/checkout-overview-page';
@@ -8,6 +9,7 @@ import { HeaderComponent } from '../page-objects/components/header/header';
 
 type Pages = {
   inventory: InventoryPage;
+  inventoryItem: InventoryItemPage;
   cart: CartPage;
   checkoutInformation: CheckoutInformationPage;
   checkoutOverview: CheckoutOverviewPage;
@@ -18,6 +20,10 @@ type Pages = {
 export const test = base.extend<Pages>({
   inventory: async ({ page }, use) => {
     await use(new InventoryPage(page));
+  },
+
+  inventoryItem: async ({ page }, use) => {
+    await use(new InventoryItemPage(page));
   },
 
   cart: async ({ page }, use) => {

@@ -16,7 +16,7 @@ export default defineConfig({
 
   use: {
     baseURL: config.baseURL,
-    headless: false,
+    headless: true,
     trace: 'on-first-retry',
   },
 

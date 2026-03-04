@@ -40,6 +40,3 @@ if (!isEnvironmentKey(ENV)) {
 }
 
 export const config = environments[ENV];
-
-console.log('ACTIVE ENV:', ENV);
-console.log('BASE URL:', config.baseURL);

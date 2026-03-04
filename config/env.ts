@@ -15,3 +15,4 @@ function getEnvValue(name: string): string {
 export const ENV = (process.env.ENV ?? 'dev').toLowerCase();
 
 export const SECRET_KEY = getEnvValue('SECRET_KEY');
+export const LOG_LEVEL = (process.env.LOG_LEVEL ?? 'info').toLowerCase();

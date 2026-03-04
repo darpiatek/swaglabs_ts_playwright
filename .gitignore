@@ -1,0 +1,42 @@
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+.env
+
+# Playwright auth storage
+.auth/
+
+# VSCode
+.vscode/
+
+# Allure
+allure-results/
+allure-report/
+
+# Node
+node_modules/
+
+# Playwright
+playwright-report/
+test-results/
+.auth/
+
+# Allure
+allure-results/
+allure-report/
+
+# VSCode
+.vscode/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store

@@ -6,7 +6,10 @@ const environments = {
     baseURL: 'https://www.saucedemo.com/',
     users: {
       standard: {
-        username: 'standard_user',
+        username: decrypt(
+          '7a3da27db24ef78066519844ed177503:e4b5e3ab919cf6bfcdf4a21e38b30e44',
+          SECRET_KEY
+        ),
         password: decrypt(
           'f9a51ef639fa6ba01ff3fe7b8c452bcb:1f550426bc4bade61ec174ace41313d6',
           SECRET_KEY
@@ -19,7 +22,10 @@ const environments = {
     baseURL: 'https://www.saucedemo.com/',
     users: {
       standard: {
-        username: 'standard_user',
+        username: decrypt(
+          '7a3da27db24ef78066519844ed177503:e4b5e3ab919cf6bfcdf4a21e38b30e44',
+          SECRET_KEY
+        ),
         password: decrypt(
           'f9a51ef639fa6ba01ff3fe7b8c452bcb:1f550426bc4bade61ec174ace41313d6',
           SECRET_KEY

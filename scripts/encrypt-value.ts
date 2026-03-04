@@ -1,4 +1,3 @@
-import { SECRET_KEY, ENV } from '../config/env';
 import { encrypt } from '../config/encryption';
 import { logger } from '../config/logger';
 
@@ -13,6 +12,8 @@ import { logger } from '../config/logger';
  *
  * This is typically used during development to prepare encrypted
  * credentials that will later be used in automated tests.
+ * 
+ * Run command: npx tsx scripts/encrypt-value.ts
  */
 
 logger.debug('Reading SECRET_KEY from environment variables');
@@ -21,7 +22,7 @@ logger.debug('Reading SECRET_KEY from environment variables');
  * Output the current SECRET_KEY value from environment variables.
  * Useful for verifying that environment configuration is loaded.
  */
-console.log('SECRET_KEY =', process.env.SECRET_KEY);
+logger.debug(`SECRET_KEY = ${process.env.SECRET_KEY}`);
 
 /**
  * Retrieve the secret key used for encryption.
@@ -34,11 +35,12 @@ logger.debug('Encrypting password using provided SECRET_KEY');
 /**
  * Encrypt the plain text password.
  */
-const encrypted = encrypt('secret_sauce', secret);
+const encrypted = encrypt('standard_user', secret);
 
 logger.debug('Encryption completed successfully');
 
 /**
  * Output the encrypted password.
  */
-console.log('ENCRYPTED =', encrypted);
+logger.debug(`ENCRYPTED = ${encrypted}`);
+console.log(`ENCRYPTED = ${encrypted}`);

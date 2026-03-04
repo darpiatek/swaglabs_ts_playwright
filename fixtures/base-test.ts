@@ -1,4 +1,4 @@
-import { test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import { InventoryPage } from '../page-objects/inventory-page/inventory-page';
 import { InventoryItemPage } from '../page-objects/inventory-page/inventory-item-page';
 import { CartPage } from '../page-objects/cart-page/cart-page';
@@ -47,4 +47,16 @@ export const test = base.extend<Pages>({
   },
 });
 
-export { expect } from '@playwright/test';
+
+test.afterEach(async ({ page }, testInfo) => {
+  if (testInfo.status !== testInfo.expectedStatus) {
+    const screenshot = await page.screenshot();
+
+    await testInfo.attach('screenshot-on-failure', {
+      body: screenshot,
+      contentType: 'image/png',
+    });
+  }
+});
+
+export { expect };

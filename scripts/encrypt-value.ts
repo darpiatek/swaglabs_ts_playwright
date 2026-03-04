@@ -1,6 +1,6 @@
 import { SECRET_KEY, ENV } from '../config/env';
 import { encrypt } from '../config/encryption';
-import { logger } from './logger';
+import { logger } from '../config/logger';
 
 /**
  * Utility script used to generate an encrypted value

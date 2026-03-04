@@ -1,26 +1,30 @@
-# Swag Labs – Playwright + TypeScript Automation
+# Swag Labs -- Playwright + TypeScript Automation
 
-End-to-end test automation project for **https://www.saucedemo.com** built with:
+End-to-end test automation project for **https://www.saucedemo.com**
+built with:
 
-- Playwright
-- TypeScript
-- Page Object Model (POM)
-- Environment configuration
-- Encrypted credentials
-- Allure reporting
-- Jenkins pipeline support
+-   Playwright
+-   TypeScript
+-   Page Object Model (POM)
+-   Environment-based configuration
+-   Encrypted credentials
+-   Custom logger with log levels
+-   Parallel test execution
+-   Allure reporting
+-   Jenkins CI pipeline
 
----
+------------------------------------------------------------------------
 
 # 📦 Tech Stack
 
-- Node.js
-- Playwright
-- TypeScript
-- Allure Reporter
-- Jenkins (CI-ready)
+-   Node.js
+-   Playwright
+-   TypeScript
+-   Allure Reporter
+-   Jenkins
+-   Custom Logger
 
----
+------------------------------------------------------------------------
 
 # 🚀 Getting Started (Local Setup)
 
@@ -28,247 +32,297 @@ End-to-end test automation project for **https://www.saucedemo.com** built with:
 
 Make sure Node.js is installed:
 
-```bash
-node -v
-npm -v
-```
+    node -v
+    npm -v
 
 If not installed:
 
-```bash
-brew install node
-```
+    brew install node
 
----
+------------------------------------------------------------------------
 
 ## 2️⃣ Install dependencies
 
 From project root:
 
-```bash
-npm install
-```
+    npm install
 
 Install Playwright browsers:
 
-```bash
-npx playwright install
+    npx playwright install
+
+------------------------------------------------------------------------
+
+# ⚙ Environment Configuration
+
+Create `.env` file in the project root:
+
+    ENV=dev
+    SECRET_KEY=your_secret_key_here
+    LOG_LEVEL=info
+
+### Environment variables
+
+  Variable     Description
+  ------------ -----------------------------
+  ENV          Target environment
+  SECRET_KEY   Used to decrypt credentials
+  LOG_LEVEL    Logger verbosity
+
+------------------------------------------------------------------------
+
+# 🌍 Environment Separation
+
+The project supports multiple environments.
+
+Environment configuration is stored in:
+
+    data/environments.ts
+
+Example structure:
+
+``` ts
+export const environments = {
+  dev: {
+    baseUrl: 'https://www.saucedemo.com'
+  },
+  tst: {
+    baseUrl: 'https://www.saucedemo.com'
+  }
+};
 ```
 
----
+Each environment may contain:
 
-## 3️⃣ Environment Configuration
+-   base URLs
+-   users
+-   credentials
+-   feature flags
+-   test data
 
-Create `.env` file in project root:
+Environment resolution is handled in:
 
+    config/env.ts
+
+------------------------------------------------------------------------
+
+# 📝 Logging
+
+Project includes a custom logger supporting multiple log levels.
+
+Supported levels:
+
+    debug
+    info
+    warn
+    error
+
+Example:
+
+``` ts
+logger.info('Navigating to inventory page');
+logger.debug('Returning locator: productPrices');
 ```
-ENV=dev
-SECRET_KEY=your_secret_key_here
-```
 
-`ENV` determines which environment configuration is used.
+Example output:
 
-Supported environments are defined in:
+    [2026-03-04T15:10:11.412Z] [INFO] Navigating to inventory page
+    [2026-03-04T15:10:11.912Z] [DEBUG] Returning locator: productPrices
 
-```
-data/environments.ts
-```
+------------------------------------------------------------------------
 
----
+# 🔐 Encryption
+
+Sensitive data such as passwords are stored **in encrypted form**.
+
+Encryption algorithm:
+
+    AES-256-CBC
+
+Encryption utilities:
+
+    config/encryption.ts
+
+Example encrypted value:
+
+    8a51c9c4e7e52f0e3e0c3a2eae2c9c12:8f0b4c9c81f0f5f07c5c64c33b2e77aa
+
+## Encryption Flow
+
+1.  Password encrypted with `SECRET_KEY`
+2.  Stored in `data/environments.ts`
+3.  Decrypted at runtime using `process.env.SECRET_KEY`
+
+------------------------------------------------------------------------
 
 # ▶ Running Tests Locally
 
-## Run all tests
+Run all tests:
 
-```bash
-npx playwright test
+    npx playwright test
+
+Run specific browser:
+
+    npx playwright test --project=chromium
+
+Run specific test:
+
+    npx playwright test tests/purchase.spec.ts
+
+------------------------------------------------------------------------
+
+# ⚡ Parallel Execution
+
+Playwright runs tests in parallel.
+
+Configuration:
+
+    playwright.config.ts
+
+Example:
+
+``` ts
+workers: 4
 ```
 
-## Run specific project
+Benefits:
 
-```bash
-npx playwright test --project=chromium
-```
+-   faster execution
+-   scalable test suites
+-   CI friendly
 
-## Run specific test file
-
-```bash
-npx playwright test tests/purchase.spec.ts
-```
-
----
+------------------------------------------------------------------------
 
 # 📊 Reports
 
-## 1️⃣ Playwright HTML Report
+## Playwright HTML Report
 
-After running tests:
+    npx playwright show-report
 
-```bash
-npx playwright show-report
-```
+Report location:
 
-Report is generated in:
+    playwright-report/
 
-```
-playwright-report/
-```
+------------------------------------------------------------------------
 
----
+## Allure Report
 
-## 2️⃣ Allure Report (Recommended)
+Install:
 
-### Install Allure CLI
+    brew install openjdk
+    brew install allure
 
-Requires Java installed:
+Generate report:
 
-```bash
-brew install openjdk
-```
+    npx allure serve allure-results
 
-Install Allure CLI:
+Directories:
 
-```bash
-brew install allure
-```
+    allure-results/
+    allure-report/
 
----
-
-### Generate Allure Report
-
-After test execution:
-
-```bash
-npx allure serve allure-results
-```
-
-This will:
-- Generate report
-- Start local server
-- Open browser automatically
-
-Results directory:
-
-```
-allure-results/
-```
-
-Generated report directory:
-
-```
-allure-report/
-```
-
----
+------------------------------------------------------------------------
 
 # 🏗 Project Structure
 
-```
-page-objects/
-  inventory-page/
-  cart-page/
-  checkout-page/
-  components/
+    page-objects/
+      inventory-page/
+      cart-page/
+      checkout-pages/
+      components/
 
-data/
-  environments.ts
-  products.ts
+    data/
+      environments.ts
+      products.ts
 
-config/
-  env.ts
-  encryption.ts
+    config/
+      env.ts
+      encryption.ts
+      logger.ts
 
-tests/
-  setup/
-  purchase.spec.ts
-```
+    tests/
+      setup/
+      purchase.spec.ts
 
----
-
-# 🔐 Credentials Handling
-
-- Passwords are encrypted in `environments.ts`
-- Decrypted using `SECRET_KEY` from `.env`
-- Sensitive data is not stored in plain text
-
----
+------------------------------------------------------------------------
 
 # 🧪 Test Architecture
 
-- Page Object Model
-- Business steps grouped using `test.step()`
-- Environment-based configuration
-- Setup project for authentication
-- Storage state reuse for logged-in sessions
+The project follows **Page Object Model (POM)**.
 
----
+Key ideas:
+
+-   page objects encapsulate actions
+-   locators stored separately
+-   environment-based configuration
+-   reusable authentication
+-   structured logging
+-   parallel execution
+
+------------------------------------------------------------------------
+
+# 🔑 Authentication Setup
+
+Authentication executed once in setup.
+
+Storage state saved to:
+
+    .auth/storageState.json
+
+Benefits:
+
+-   faster test execution
+-   avoids repeated login
+
+------------------------------------------------------------------------
 
 # 🤖 Jenkins CI
 
-Project includes `Jenkinsfile` that:
+Pipeline steps:
 
-1. Installs dependencies
-2. Installs Playwright browsers
-3. Runs tests
-4. Publishes Allure report
+1.  Install dependencies
+2.  Install Playwright browsers
+3.  Run tests
+4.  Publish Allure report
 
----
+Pipeline parameters:
+
+    ENV
+    LOG_LEVEL
+
+Example:
+
+    ENV=tst
+    LOG_LEVEL=info
+
+------------------------------------------------------------------------
 
 # 🧹 Ignored Files
 
-The following folders are excluded from Git:
+    node_modules/
+    .auth/
+    playwright-report/
+    test-results/
+    allure-results/
+    allure-report/
+    .vscode/
 
-```
-node_modules/
-.auth/
-playwright-report/
-test-results/
-allure-results/
-allure-report/
-.vscode/
-```
+------------------------------------------------------------------------
 
----
-
-# 🧠 Notes
-
-- Tests use environment-based configuration
-- All URLs are centrally managed
-- No hardcoded strings in test scenarios
-- All business steps visible in Allure
-
----
-
-# 📌 Quick Commands Cheat Sheet
+# 📌 Quick Commands
 
 Run tests:
 
-```bash
-npx playwright test
-```
+    npx playwright test
 
-Open Playwright report:
+Show report:
 
-```bash
-npx playwright show-report
-```
+    npx playwright show-report
 
-Open Allure report:
+Allure:
 
-```bash
-npx allure serve allure-results
-```
+    npx allure serve allure-results
 
----
-
-Project ready for:
-
-- Local execution
-- CI pipelines
-- Reporting
-- Scalable test development
-
----
+------------------------------------------------------------------------
 
 Happy testing 🚀
-

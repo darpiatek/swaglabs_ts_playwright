@@ -10,6 +10,10 @@ const purchaseData = rawData as PurchaseData;
 
 // test.describe.configure({ mode: 'parallel' });
 
+test.beforeEach(async ({ inventory }) => {
+  await inventory.goto();
+});
+
 test('Standard user completes a purchase successfully', async ({
   inventory,
   cart,
@@ -19,10 +23,6 @@ test('Standard user completes a purchase successfully', async ({
   header,
 }) => {
   let cartTotal = 0;
-
-  await test.step('Open inventory page', async () => {
-    await inventory.goto();
-  });
 
   await test.step('Add selected products to cart', async () => {
     for (const product of purchaseData.productsToAdd) {
@@ -81,10 +81,6 @@ test('Standard user purchases cheapest and most expensive product', async ({
 
   let cartTotal = 0;
   let selectedProducts: string[] = [];
-
-  await test.step('Open inventory page', async () => {
-    await inventory.goto();
-  });
 
   await test.step('Sort products by price (low to high)', async () => {
     await inventory.sortByPriceLowToHigh();
@@ -151,10 +147,6 @@ test('User sees all products and correct product details', async ({
   inventory,
   inventoryItem,
 }) => {
-
-  await test.step('Open inventory page', async () => {
-    await inventory.goto();
-  });
 
   await test.step('Verify all products are visible on inventory page', async () => {
     for (const product of products) {
